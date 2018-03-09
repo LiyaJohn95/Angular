@@ -1,0 +1,153 @@
+<div [@routerTransition]>
+ <div class="col-md-12">
+      <div class="card card-plain">
+          <div class="card-header" data-background-color="red">
+              <h4 class="title">List of diseases</h4>
+              <button type="button" (click)="addDesease(adddesease)" class="btn btn-default">Add Disease</button>
+          </div>
+          <div class="card-content table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                          <th>Name</th>
+                          <th>Remarks</th>
+                          <th></th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr  *ngFor="let desease of this.deseaseListMaster?.deseaselist" >
+                          <td>{{desease.name}}</td>
+                          <td>{{desease.remarks}}</td>
+                          <td><button type="button" (click)="editDeseaseAction(editdesease, desease)" class="btn btn-default">
+                            Edit
+                          </button></td>
+                          <td><button type="button" (click)="deleteDeseaseAction(deletedesease, desease)" class="btn btn-default">
+                            Delete
+                          </button></td>
+                      </tr>
+                      <tr *ngIf="this.deseaseListMaster == null">
+                          <td colspan = "4"><p>No Data Available</p></td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+<spinner-component></spinner-component>
+<ng-template #adddesease let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Add New Disease</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="addisease" >
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control" formControlName="name">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="addisease.controls['name'].invalid && (addisease.controls['name'].dirty || addisease.controls['name'].touched)" class="alert alert-danger">
+                <div *ngIf="addisease.controls['name'].errors.required">
+                  Name is required.
+                </div>
+            </div>
+            <div class="row"  >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label " >Remarks</label>
+                        <input type="text" class="form-control" formControlName="remarks">
+                      </div>
+                </div>
+            </div>
+            <div *ngIf="addisease.controls['remarks'].invalid && (addisease.controls['remarks'].dirty || addisease.controls['remarks'].touched)" class="alert alert-danger">
+              <div *ngIf="addisease.controls['remarks'].errors.required">
+                Remarks is required.
+              </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click) = "addDiseaseAction(addisease)" >Add Disease</button>    
+    </div>
+    <div *ngIf="this.deseaseListMaster?.status <= 0 && this.isAddDeseaseDone" class="alert alert-danger">
+        {{this.deseaseListMaster.message}}
+  </div>
+</ng-template>
+
+<ng-template #editdesease let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Edit Disease</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editisease" >
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control" formControlName="name" [(ngModel)]="currentSelected.name">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="editisease.controls['name'].invalid && (editisease.controls['name'].dirty || editisease.controls['name'].touched)" class="alert alert-danger">
+                <div *ngIf="editisease.controls['name'].errors.required">
+                  Name is required.
+                </div>
+            </div>
+            <div class="row"  >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label " >Remarks</label>
+                        <input type="text" class="form-control" formControlName="remarks" [(ngModel)]="currentSelected.remarks">
+                      </div>
+                </div>
+            </div>
+            <div *ngIf="editisease.controls['remarks'].invalid && (editisease.controls['remarks'].dirty || editisease.controls['remarks'].touched)" class="alert alert-danger">
+              <div *ngIf="editisease.controls['remarks'].errors.required">
+                Remarks is required.
+              </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click) = "editDiseaseSubmit(editisease)" >Update Disease</button>    
+    </div>
+    <div *ngIf="this.deseaseListMaster?.status <= 0 && this.isAddDeseaseDone" class="alert alert-danger">
+        {{this.deseaseListMaster.message}}
+  </div>
+</ng-template>
+
+<ng-template #deletedesease let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Delete Disease</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editisease" >
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Please confirm, are you want to delete ?</label>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click) = "deleteDiseaseSubmit(editisease)" >OK</button>    
+        <button type="button" class="btn btn-danger pull-right" (click)="d('Cross click')" >Cancel</button>    
+    </div>
+
+</ng-template>

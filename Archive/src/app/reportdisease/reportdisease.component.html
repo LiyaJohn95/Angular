@@ -1,0 +1,102 @@
+<div >
+    <div class="col-md-12">
+        <div class="card card-plain">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title"> Reported Diseases</h4>
+                <button type="button" (click)="reportDiseaseModelDisplay(reportdesease)" class="btn btn-default">Report Disease</button>
+            </div>
+            <div class="card-content table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Disease Name</th>
+                            <th>Reported By</th>
+                            <th>Remarks</th>
+                            <th>Reported On</th>
+                            <th>City Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let desease of this.reportedDiseaseList?.deseasereplist">
+                            <td>{{desease.name}}</td>
+                            <td>{{desease.user_name}}</td>
+                            <td>{{desease.remarks}}</td>
+                            <td>{{desease.reportedOn}}</td>
+                            <td>{{desease.city_name}}</td>
+                        </tr>
+                        <tr *ngIf="this.reportedDiseaseList?.status < 0">
+                            <td colspan="4">
+                                <p>No Data Available</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<spinner-component></spinner-component>
+<ng-template #reportdesease let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Report Disease</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModelView()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="reportDiseaseUser">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Select Disease</label>
+                        <select class="form-control" formControlName="dID" (change)="onChangeDisease($event.target.value)">
+                            <option *ngFor="let disease of this.diseaseList" [value]="disease.deseaseID">{{disease.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Remarks</label>
+                        <input type="text" class="form-control" formControlName="remarks">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="reportDiseaseUser.controls['remarks'].invalid && (reportDiseaseUser.controls['remarks'].dirty || reportDiseaseUser.controls['remarks'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="reportDiseaseUser.controls['remarks'].errors.required">
+                    Description is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <!--div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Reported On</label>
+                        <input type="text" class="form-control" formControlName="reportedOn">
+                    </div-->
+                    <div class="input-group datepicker-input">
+                        <input class="form-control" placeholder="yyyy-mm-dd"
+                            name="reportedOn" formControlName="reportedOn" [(ngModel)]="reportedOn" ngbDatepicker #d="ngbDatepicker">
+                        <button class="input-group-addon" (click)="d.toggle()" type="button">
+                            <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+                            <span class="fa fa-calendar"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="reportDiseaseUser.controls['reportedOn'].invalid && (reportDiseaseUser.controls['reportedOn'].dirty || reportDiseaseUser.controls['reportedOn'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="reportDiseaseUser.controls['reportedOn'].errors.required">
+                    Reported date required.
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click)="reportDiseaseAction(reportDiseaseUser)">Report Disease</button>
+    </div>
+    <div *ngIf="this.reportedDiseaseList?.status <= 0 && this.isAddUserDone" class="alert alert-danger">
+        {{this.reportedDiseaseList?.message}}
+    </div>
+</ng-template>

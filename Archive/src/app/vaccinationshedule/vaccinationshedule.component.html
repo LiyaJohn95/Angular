@@ -1,0 +1,204 @@
+<div >
+  <div class="col-md-12">
+      <div class="card card-plain">
+          <div class="card-header" data-background-color="red">
+              <h4 class="title">Schedule Vaccination</h4>
+              <button type="button" (click)="addScheduleModelDisplay(addvaccshdmodel)" class="btn btn-default">Schedule Vaccination</button>
+          </div>
+          <div class="card-content table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                          <th>Vaccination Name</th>
+                          <th>Schedule On</th>
+                          <th>City</th>
+                          <th>Remarks</th>
+                          <th></th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let schedulelist of this.vaccScheduleListMaster?.vaccishedule">
+                          <td>{{schedulelist.vaccName}}</td>
+                          <td>{{schedulelist.sheduledOn}}</td>
+                          <td>{{schedulelist.cname}}</td>
+                          <td>{{schedulelist.remarks}}</td>
+                          <td>
+                              <button type="button" (click)="editVacciSheduleAction(editvaccshddetails, schedulelist)" class="btn btn-default">
+                                  Edit
+                              </button>
+                          </td>
+                          <td>
+                              <button type="button" (click)="deleteVacciSheduleAction(deletevaccshddetails, schedulelist)" class="btn btn-default">
+                                  Delete
+                              </button>
+                          </td>
+                      </tr>
+                      <tr *ngIf="this.vaccScheduleListMaster == null">
+                        <td colspan = "4"><p>No Data Available</p></td>
+                    </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+<spinner-component></spinner-component>
+<ng-template #addvaccshdmodel let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title">Schedule Vaccination</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="addvaccshd">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group form-black label-floating is-empty">
+                    <label class="control-label ">Vaccination Name</label>
+                    <select class="form-control" formControlName="vID" (change)="onChange($event.target.value)">
+                        <option *ngFor="let vacclist of this.vaccinationList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="vacclist.idvaccination">{{vacclist.name}}</option>
+                    </select>
+                  </div>
+              </div>
+          </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group form-black label-floating is-empty">
+                      <label class="control-label ">Scheduled On</label>
+                      <input type="text" class="form-control" formControlName="sheduledOn">
+                  </div>
+              </div>
+          </div>
+          <div *ngIf="addvaccshd.controls['sheduledOn'].invalid && (addvaccshd.controls['sheduledOn'].dirty || addvaccshd.controls['sheduledOn'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="addvaccshd.controls['sheduledOn'].errors.required">
+                  Scheduled On is required
+              </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+                <div class="form-group form-black label-floating is-empty">
+                    <label class="control-label ">City</label>
+                    <select class="form-control" formControlName="cityID" (change)="onChange($event.target.value)">
+                        <option *ngFor="let cityval of this.userCityList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="cityval.idcity">{{cityval.name}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group form-black label-floating is-empty">
+                      <label class="control-label ">Remarks</label>
+                      <input type="text" class="form-control" formControlName="remarks">
+                  </div>
+              </div>
+          </div>
+          <div *ngIf="addvaccshd.controls['remarks'].invalid && (addvaccshd.controls['remarks'].dirty || addvaccshd.controls['remarks'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="addvaccshd.controls['remarks'].errors.required">
+                  Remarks is required.
+              </div>
+          </div>
+
+      </form>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-danger pull-right" (click)="addVaccScheduleAction(addvaccshd)">Schedule</button>
+  </div>
+  <div *ngIf="this.vaccScheduleListMaster?.status <= 0 && this.isAddUserDone" class="alert alert-danger">
+      {{this.vaccScheduleListMaster.message}}
+  </div>
+</ng-template>
+
+<ng-template #editvaccshddetails let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title">Edit Schedule</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="editvaccshd">
+        <div class="row">
+          <div class="col-md-12">
+              <div class="form-group form-black label-floating is-empty">
+                <label class="control-label ">Vaccination Name</label>
+                <select class="form-control" formControlName="vID" (change)="onChange($event.target.value)">
+                    <option *ngFor="let vacclist of this.vaccinationList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="vacclist.idvaccination">{{vacclist.name}}</option>
+                </select>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-md-12">
+              <div class="form-group form-black label-floating is-empty">
+                  <label class="control-label ">Scheduled On</label>
+                  <input type="text" class="form-control" formControlName="sheduledOn">
+              </div>
+          </div>
+      </div>
+      <div *ngIf="editvaccshd.controls['sheduledOn'].invalid && (editvaccshd.controls['sheduledOn'].dirty || editvaccshd.controls['sheduledOn'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="editvaccshd.controls['sheduledOn'].errors.required">
+              Scheduled On is required
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+            <div class="form-group form-black label-floating is-empty">
+                <label class="control-label ">City</label>
+                <select class="form-control" formControlName="cityID" (change)="onChange($event.target.value)">
+                    <option *ngFor="let cityval of this.userCityList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="cityval.idcity">{{cityval.name}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+      <div class="row">
+          <div class="col-md-12">
+              <div class="form-group form-black label-floating is-empty">
+                  <label class="control-label ">Remarks</label>
+                  <input type="text" class="form-control" formControlName="remarks">
+              </div>
+          </div>
+      </div>
+      <div *ngIf="editvaccshd.controls['remarks'].invalid && (editvaccshd.controls['remarks'].dirty || editvaccshd.controls['remarks'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="editvaccshd.controls['remarks'].errors.required">
+              Remarks is required.
+          </div>
+      </div>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-danger pull-right" (click)="editVaccinationScheduleSubmit(editvaccshd)">Update Schedule</button>
+  </div>
+  <div *ngIf="this.vaccScheduleListMaster?.status <= 0 && this.isAddUserDone" class="alert alert-danger">
+      {{this.vaccScheduleListMaster.message}}
+  </div>
+</ng-template>
+
+<ng-template #deletevaccshddetails let-c="close" let-d="dismiss">
+  <div class="modal-header">
+      <h4 class="modal-title">Delete Schedule</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <form [formGroup]="editvaccshd">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group form-black label-floating is-empty">
+                      <label class="control-label">Please confirm, are you want to delete ?</label>
+                  </div>
+              </div>
+          </div>
+      </form>
+  </div>
+  <div class="modal-footer">
+      <button type="button" class="btn btn-danger pull-right" (click)="deleteSchedulSubmit(editvaccshd)">OK</button>
+      <button type="button" class="btn btn-danger pull-right" (click)="d('Cross click')">Cancel</button>
+  </div>
+</ng-template>

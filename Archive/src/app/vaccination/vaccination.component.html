@@ -1,0 +1,150 @@
+<div [@routerTransition]>
+ <div class="col-md-12">
+      <div class="card card-plain">
+          <div class="card-header" data-background-color="red">
+              <h4 class="title">List of vaccinations</h4>
+              <button type="button" (click)="addVaccinationModelDisplay(addvaccinationmodel)" class="btn btn-default">Add Vaccination</button>
+          </div>
+          <div class="card-content table-responsive">
+              <table class="table table-hover">
+                  <thead>
+                      <tr>
+                          <th>Name</th>
+                          <th>Description</th>
+                          <th></th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr  *ngFor="let vaccination of this.vaccinationListMaster?.vaccinationlist" >
+                          <td>{{vaccination.name}}</td>
+                          <td>{{vaccination.description}}</td>
+                          <td><button type="button" (click)="editVaccinationAction(editvaccinations, vaccination)" class="btn btn-default">
+                            Edit
+                          </button></td>
+                          <td><button type="button" (click)="deleteVaccinationAction(deletevaccination, vaccination)" class="btn btn-default">
+                            Delete
+                          </button></td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+</div>
+<spinner-component></spinner-component>
+<ng-template #addvaccinationmodel let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Add New Vaccination</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="addvacc" >
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control" formControlName="name">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="addvacc.controls['name'].invalid && (addvacc.controls['name'].dirty || addvacc.controls['name'].touched)" class="alert alert-danger">
+                <div *ngIf="addvacc.controls['name'].errors.required">
+                  Name is required.
+                </div>
+            </div>
+            <div class="row"  >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label " >Description</label>
+                        <input type="text" class="form-control" formControlName="description">
+                      </div>
+                </div>
+            </div>
+            <div *ngIf="addvacc.controls['description'].invalid && (addvacc.controls['description'].dirty || addvacc.controls['description'].touched)" class="alert alert-danger">
+              <div *ngIf="addvacc.controls['description'].errors.required">
+                Description is required.
+              </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click) = "addVaccinationAction(addvacc)" >Add Vaccination</button>    
+    </div>
+    <div *ngIf="this.vaccinationListMaster?.status <= 0 && this.isAddVaccinationDone" class="alert alert-danger">
+        {{this.vaccinationListMaster.message}}
+  </div>
+</ng-template>
+
+<ng-template #editvaccinations let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Edit Vaccination</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editvacc" >
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control" formControlName="name" [(ngModel)]="currentSelected.name">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="editvacc.controls['name'].invalid && (editvacc.controls['name'].dirty || editvacc.controls['name'].touched)" class="alert alert-danger">
+                <div *ngIf="editvacc.controls['name'].errors.required">
+                  Name is required.
+                </div>
+            </div>
+            <div class="row"  >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label " >Description</label>
+                        <input type="text" class="form-control" formControlName="description" [(ngModel)]="currentSelected.description">
+                      </div>
+                </div>
+            </div>
+            <div *ngIf="editvacc.controls['description'].invalid && (editvacc.controls['description'].dirty || editvacc.controls['description'].touched)" class="alert alert-danger">
+              <div *ngIf="editvacc.controls['description'].errors.required">
+                Description is required.
+              </div>
+          </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click) = "editVaccinationSubmit(editvacc)" >Update Vaccination</button>    
+    </div>
+    <div *ngIf="this.vaccinationListMaster?.status <= 0 && this.isAddVaccinationDone" class="alert alert-danger">
+        {{this.vaccinationListMaster.message}}
+  </div>
+</ng-template>
+
+<ng-template #deletevaccination let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Delete Vaccination</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editvaccination" >
+            <div class="row" >
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Please confirm, are you want to delete ?</label>
+                    </div>
+                </div>
+            </div>
+            
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click) = "deleteVaccinatiobSubmit(editvaccination)" >OK</button>    
+        <button type="button" class="btn btn-danger pull-right" (click)="d('Cross click')" >Cancel</button>    
+    </div>
+
+</ng-template>

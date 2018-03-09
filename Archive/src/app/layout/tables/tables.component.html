@@ -1,0 +1,43 @@
+<div [@routerTransition]>
+    <app-page-header [heading]="'Tables'" [icon]="'fa-table'"></app-page-header>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-plain">
+                <div class="card-header" data-background-color="red">
+                    <h4 class="title">List All Diseases Available</h4>
+                    <button type="button"  class="btn btn-default">Add Disease</button>
+                </div>
+                <div class="card-content table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Reported From</th>
+                                <th>Reported On</th>
+                                <th>Description</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!--tr *ngFor="let dataserv of itemsarray" >
+                                <td>{{dataserv.id}}</td>
+                                <td>{{dataserv.name}}</td>
+                                <td>{{dataserv.reportedfrom}}</td>
+                                <td>{{dataserv.reportedon}}</td>
+                                <td>{{dataserv.symtopms}}</td>
+                                <td><button type="button" (click)="adddeasemodel.open()" class="btn btn-default">
+                                  Edit
+                                </button></td>
+                                <td><button type="button" (click)="deleteDesease(dataserv.id)" class="btn btn-default">
+                                  Delete
+                                </button></td>
+                            </tr-->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

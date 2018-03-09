@@ -1,0 +1,30 @@
+<div>
+    <div class="col-md-12">
+        <div class="card card-plain">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title">Vaccination Excel File Upload</h4>
+            </div>
+            <div class="modal-body" enctype="multipart/form-data">
+                <form [formGroup]="uploadExcel" >
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Select Vaccination</label>
+                        <select class="form-control" formControlName="vID" (change)="onChangeVaccination($event.target.value)">
+                            <option *ngFor="let vacclist of this.vaccinationScheduleList?.vaccishedule; let i = index" [value]="i">{{vacclist.name}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group form-black is-empty">
+                        <label class="control-label ">Choose a File</label>
+                        <input type="file" formControlName="file" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" (change)="onChange($event.target.files)">
+                    </div>
+                </form>
+                <div class="modal-footer">
+                    <button type="button" (click)="addVaccExcelUploadScheduleAction(uploadExcel)" [disabled]="!this.isFileAvailable" class="btn btn-danger pull-right" >Upload Excel</button>
+                </div>
+                <div *ngIf="this.isExcelUploadDone" class="alert alert-danger">
+                    {{this.generalStatus.message}}
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>
+<spinner-component></spinner-component>

@@ -1,0 +1,325 @@
+<div [@routerTransition]>
+    <div class="col-md-12">
+        <div class="card card-plain">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title">List of users</h4>
+                <button type="button" (click)="addUserModelDisplay(addusermodel)" class="btn btn-default">Add New User</button>
+            </div>
+            <div class="card-content table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Contact No</th>
+                            <th>Contact Person</th>
+                            <th>Mobile Number</th>
+                            <th>Email ID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let userlist of this.userListMaster?.userlist">
+                            <td>{{userlist.name}}</td>
+                            <td>{{userlist.address}}</td>
+                            <td>{{userlist.contactNo}}</td>
+                            <td>{{userlist.contact_person}}</td>
+                            <td>{{userlist.contact_mobile}}</td>
+                            <td>{{userlist.emailID}}</td>
+                            <td>
+                                <button type="button" (click)="editUserAction(edituserdetails, userlist)" class="btn btn-default">
+                                    Edit
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" (click)="deleteUserAction(deleteuserdetails, userlist)" class="btn btn-default">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="this.userListMaster == null">
+                            <td colspan = "6"><p>No Data Available</p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<spinner-component></spinner-component>
+<ng-template #addusermodel let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Add New User</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="adduser">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control" formControlName="name">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="adduser.controls['name'].invalid && (adduser.controls['name'].dirty || adduser.controls['name'].touched)" class="alert alert-danger">
+                <div *ngIf="adduser.controls['name'].errors.required">
+                    Name is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Address</label>
+                        <input type="text" class="form-control" formControlName="address">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="adduser.controls['address'].invalid && (adduser.controls['address'].dirty || adduser.controls['address'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="adduser.controls['address'].errors.required">
+                    Address is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Contact No</label>
+                        <input type="text" class="form-control" formControlName="contactNo">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="adduser.controls['contactNo'].invalid && (adduser.controls['contactNo'].dirty || adduser.controls['contactNo'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="adduser.controls['contactNo'].errors.required">
+                    Contact Number is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">City</label>
+                        <select class="form-control" formControlName="cityID" (change)="onChange($event.target.value)">
+                            <option *ngFor="let cityval of this.userCityList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="cityval.idcity">{{cityval.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Contact Person</label>
+                        <input type="text" class="form-control" formControlName="contact_person">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="adduser.controls['contact_person'].invalid && (adduser.controls['contact_person'].dirty || adduser.controls['contact_person'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="adduser.controls['contact_person'].errors.required">
+                    Contact Person is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Contact Mobile</label>
+                        <input type="text" class="form-control" formControlName="contact_mobile">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="adduser.controls['contact_mobile'].invalid && (adduser.controls['contact_mobile'].dirty || adduser.controls['contact_mobile'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="adduser.controls['contact_mobile'].errors.required">
+                    Contact Mobile is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Email ID</label>
+                        <input type="text" class="form-control" formControlName="emailID">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="adduser.controls['emailID'].invalid && (adduser.controls['emailID'].dirty || adduser.controls['emailID'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="adduser.controls['emailID'].errors.required">
+                    Email ID is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Password</label>
+                        <input type="text" class="form-control" formControlName="password">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="adduser.controls['password'].invalid && (adduser.controls['password'].dirty || adduser.controls['password'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="adduser.controls['password'].errors.required">
+                    Password is required.
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click)="addUserAction(adduser)">Add User</button>
+    </div>
+    <div *ngIf="this.userListMaster?.status <= 0 && this.isAddUserDone" class="alert alert-danger">
+        {{this.userListMaster.message}}
+    </div>
+</ng-template>
+
+<ng-template #edituserdetails let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Edit User</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="edituser">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Name</label>
+                        <input type="text" class="form-control" formControlName="name" [(ngModel)]="currentSelected.name">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="edituser.controls['name'].invalid && (edituser.controls['name'].dirty || edituser.controls['name'].touched)" class="alert alert-danger">
+                <div *ngIf="edituser.controls['name'].errors.required">
+                    Name is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Address</label>
+                        <input type="text" class="form-control" formControlName="address" [(ngModel)]="currentSelected.address">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="edituser.controls['address'].invalid && (edituser.controls['address'].dirty || edituser.controls['address'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="edituser.controls['address'].errors.required">
+                    Address is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Contact No</label>
+                        <input type="text" class="form-control" formControlName="contactNo" [(ngModel)]="currentSelected.contactNo">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="edituser.controls['contactNo'].invalid && (edituser.controls['contactNo'].dirty || edituser.controls['contactNo'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="edituser.controls['contactNo'].errors.required">
+                    Contact Number is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">City</label>
+                        <select class="form-control" formControlName="cityID" (change)="onChange($event.target.value)">
+                            <option *ngFor="let cityval of this.userCityList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="cityval.idcity">{{cityval.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Contact Person</label>
+                        <input type="text" class="form-control" formControlName="contact_person" [(ngModel)]="currentSelected.contact_person">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="edituser.controls['contact_person'].invalid && (edituser.controls['contact_person'].dirty || edituser.controls['contact_person'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="edituser.controls['contact_person'].errors.required">
+                    Contact Person is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Contact Mobile</label>
+                        <input type="text" class="form-control" formControlName="contact_mobile" [(ngModel)]="currentSelected.contact_mobile">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="edituser.controls['contact_mobile'].invalid && (edituser.controls['contact_mobile'].dirty || edituser.controls['contact_mobile'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="edituser.controls['contact_mobile'].errors.required">
+                    Contact Mobile is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Email ID</label>
+                        <input type="text" class="form-control" formControlName="emailID" [(ngModel)]="currentSelected.emailID">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="edituser.controls['emailID'].invalid && (edituser.controls['emailID'].dirty || edituser.controls['emailID'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="edituser.controls['emailID'].errors.required">
+                    Email ID is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Password</label>
+                        <input type="text" class="form-control" formControlName="password" [(ngModel)]="currentSelected.password">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="edituser.controls['password'].invalid && (edituser.controls['password'].dirty || edituser.controls['password'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="edituser.controls['password'].errors.required">
+                    Password is required.
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click)="editUserSubmit(edituser)">Update User</button>
+    </div>
+    <div *ngIf="this.userListMaster?.status <= 0 && this.isAddUserDone" class="alert alert-danger">
+        {{this.userListMaster.message}}
+    </div>
+</ng-template>
+
+<ng-template #deleteuserdetails let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Delete User</h4>
+        <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="edituser">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Please confirm, are you want to delete ?</label>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click)="deleteUserSubmit(edituser)">OK</button>
+        <button type="button" class="btn btn-danger pull-right" (click)="d('Cross click')">Cancel</button>
+    </div>
+
+</ng-template>

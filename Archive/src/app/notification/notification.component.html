@@ -1,0 +1,260 @@
+<div >
+    <div class="col-md-12">
+        <div class="card card-plain">
+            <div class="card-header" data-background-color="red">
+                <h4 class="title">Scheduled Notification List</h4>
+                <button type="button" (click)="addNotificationModelDisplay(addnotificationmodel)" class="btn btn-default">Add Notification</button>
+            </div>
+            <div class="card-content table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Message</th>
+                            <th>Vaccination</th>
+                            <th>Scheduled No</th>
+                            <th>Recurring Type</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let notify of this.notificationList?.notification">
+                            <td>{{notify.message}}</td>
+                            <td>{{notify.vaccinationName}}</td>
+                            <td>{{notify.firedOn}}</td>
+                            <td>{{notify.recurringName}}</td>
+                            <td>
+                                <button type="button" (click)="editNotificationModelDisplay(editnotificationdetails, notify)" class="btn btn-default">
+                                    Edit
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" (click)="deleteNotificationModelDisplay(deletenotificationdetails, notify)" class="btn btn-default">
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                        <tr *ngIf="this.notificationList == null">
+                            <td colspan="6">
+                                <p>No Data Available</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<spinner-component></spinner-component>
+<ng-template #addnotificationmodel let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Add New Notification</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModelView()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="addnotification">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Message Type</label>
+                        <select class="form-control" formControlName="type" (change)="onChangeNoticType($event.target.value)">
+                            <option value="1" selected>Vaccination Notification</option>
+                            <option value="2">Common Notification</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngIf = "this.isVaccinationNotify">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Select Vaccination </label>
+                        <select class="form-control" formControlName="vID" (change)="onChangeVaccination($event.target.value)">
+                            <option *ngFor="let vacc of this.vaccinationList" [value]="vacc.idvaccination">{{vacc.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Fired No</label>
+                        <input class="form-control" placeholder="yyyy-mm-dd" name="firedOn" formControlName="firedOn" [(ngModel)]="firedOn" ngbDatepicker
+                            #d="ngbDatepicker">
+                        <button class="input-group-addon" (click)="d.toggle()" type="button">
+                            <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+                            <span class="fa fa-calendar"></span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div *ngIf="addnotification.controls['firedOn'].invalid && (addnotification.controls['firedOn'].dirty || addnotification.controls['firedOn'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="addnotification.controls['firedOn'].errors.required">
+                    Fire Date is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Select City</label>
+                        <select class="form-control" formControlName="cityID" (change)="onChangeCity($event.target.value)">
+                            <option *ngFor="let cityval of this.cityList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="cityval.idcity">{{cityval.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Recurring Type</label>
+                        <select class="form-control" formControlName="recurring_type" (change)="onChangeRecurringType($event.target.value)">
+                            <option *ngFor="let recurring of this.recurringList"  [value]="recurring.id">{{recurring.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Message</label>
+                        <input type="text" class="form-control" formControlName="message">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="addnotification.controls['message'].invalid && (addnotification.controls['message'].dirty || addnotification.controls['message'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="addnotification.controls['message'].errors.required">
+                    Message is required.
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click)="notificatioAddAction(addnotification)">Add Notification</button>
+    </div>
+    <div *ngIf="this.notificationList?.status <= 0 && this.isAddNotificationDone" class="alert alert-danger">
+        {{this.notificationList.message}}
+    </div>
+</ng-template>
+
+<ng-template #editnotificationdetails let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Edit Notification</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModelView()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editnotification">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Message Type</label>
+                        <select class="form-control" formControlName="type" (change)="onChangeNoticType($event.target.value)" [(ngModel)]="currentSelected.type">
+                            <option [value]="1" >Vaccination Notification</option>
+                            <option [value]="2">Common Notification</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row" [hidden]="!this.isVaccinationNotify">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Select Vaccination </label>
+                        <select class="form-control" formControlName="vID" (change)="onChangeVaccination($event.target.value)" [(ngModel)]="currentSelected.vID">
+                            <option *ngFor="let vacc of this.vaccinationList" [value]="vacc.idvaccination">{{vacc.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Fire On</label>
+                        <input class="form-control" placeholder="yyyy-mm-dd" name="firedOn" formControlName="firedOn" [(ngModel)]="currentSelected.firedOn"
+                            ngbDatepicker #d="ngbDatepicker">
+                        <button class="input-group-addon" (click)="d.toggle()" type="button">
+                            <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+                            <span class="fa fa-calendar"></span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <div *ngIf="editnotification.controls['firedOn'].invalid && (editnotification.controls['firedOn'].dirty || editnotification.controls['firedOn'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="editnotification.controls['firedOn'].errors.required">
+                    Fire Date is required.
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Select City</label>
+                        <select class="form-control" formControlName="cityID" (change)="onChangeCity($event.target.value)" [(ngModel)]="currentSelected.cityID">
+                            <option *ngFor="let cityval of this.cityList" [selected]='addUserDefaultCity=="Eranakulam"' [value]="cityval.idcity">{{cityval.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Recurring Type</label>
+                        <select class="form-control" formControlName="recurring_type" (change)="onChangeRecurringType($event.target.value)" [(ngModel)]="currentSelected.recurring_type">
+                            <option *ngFor="let recurring of this.recurringList"  [value]="recurring.id">{{recurring.name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label ">Message</label>
+                        <input type="text" class="form-control" formControlName="message" [(ngModel)]="currentSelected.message">
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="editnotification.controls['message'].invalid && (editnotification.controls['message'].dirty || editnotification.controls['message'].touched)"
+                class="alert alert-danger">
+                <div *ngIf="editnotification.controls['message'].errors.required">
+                    Message is required.
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click)="editNotificationSubmit(editnotification)">Update</button>
+    </div>
+    <div *ngIf="this.notificationList?.status <= 0 && this.isAddNotificationDone" class="alert alert-danger">
+        {{this.notificationList.message}}
+    </div>
+</ng-template>
+
+<ng-template #deletenotificationdetails let-c="close" let-d="dismiss">
+    <div class="modal-header">
+        <h4 class="modal-title">Delete User</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModelView()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="editnotification">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group form-black label-floating is-empty">
+                        <label class="control-label">Please confirm, are you want to delete ?</label>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger pull-right" (click)="deleteNotificationSubmit(editnotification)">Delete</button>
+        <button type="button" class="btn btn-danger pull-right" (click)="d('Cross click')">Cancel</button>
+    </div>
+</ng-template>

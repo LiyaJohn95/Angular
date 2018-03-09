@@ -1,0 +1,40 @@
+<div [@routerTransition]>
+    <h2 class="text-muted">Dashboard <small>Statistics Overview</small></h2>
+    <hr>
+    <div class="row">
+        <div class="col-xl-4 col-lg-4">
+            <app-stat [bgClass]="'success'" [icon]="'fa-comments'" [count]="26" [label]="'New Messages'" ></app-stat>
+        </div>
+        <div class="col-xl-4 col-lg-4">
+            <app-stat [bgClass]="'warning'" [icon]="'fa-tasks'" [count]="12" [label]="'New Schedules'" ></app-stat>
+        </div>
+        <div class="col-xl-4 col-lg-4">
+            <app-stat [bgClass]="'danger'" [icon]="'fa-tasks'" [count]="12" [label]="'Pending Task'" ></app-stat>
+        </div>
+    </div>
+    <br><br>
+    <div class="row">
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Vaccination Status
+                </div>
+                <div class="card-body">
+                    <canvas baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col col-sm-6">
+            <div class="card mb-3">
+                <div class="card-header">
+                    Desease Reported
+                </div>
+                <div class="card-body">
+                    <canvas baseChart height="180px" [data]="doughnutChartData" [labels]="doughnutChartLabels" [chartType]="doughnutChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                    </canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
